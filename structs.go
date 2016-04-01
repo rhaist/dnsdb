@@ -6,29 +6,29 @@ import (
 	"time"
 )
 
-// Timestamp is used to marshal and unmarshal unix
+// timestamp is used to marshal and unmarshal unix
 // timestamps returned by the API
-type Timestamp time.Time
+type timestamp time.Time
 
-func (t *Timestamp) MarshalJSON() ([]byte, error) {
+func (t *timestamp) MarshalJSON() ([]byte, error) {
 	ts := time.Time(*t).Unix()
 	stamp := fmt.Sprint(ts)
 
 	return []byte(stamp), nil
 }
 
-func (t *Timestamp) UnmarshalJSON(b []byte) error {
+func (t *timestamp) UnmarshalJSON(b []byte) error {
 	ts, err := strconv.Atoi(string(b))
 	if err != nil {
 		return err
 	}
 
-	*t = Timestamp(time.Unix(int64(ts), 0))
+	*t = timestamp(time.Unix(int64(ts), 0))
 
 	return nil
 }
 
-func (t *Timestamp) String() string {
+func (t *timestamp) String() string {
 	if t != nil {
 		return time.Time(*t).UTC().String()
 	}
@@ -39,10 +39,10 @@ func (t *Timestamp) String() string {
 // Endpoint: /lookup/rrset
 type RRSET struct {
 	Count         int        `json:"count"`
-	TimeFirst     *Timestamp `json:"time_first,omitempty"`
-	TimeLast      *Timestamp `json:"time_last,omitempty"`
-	ZoneTimeFirst *Timestamp `json:"zone_time_first,omitempty"`
-	ZoneTimeLast  *Timestamp `json:"zone_time_last,omitempty"`
+	TimeFirst     *timestamp `json:"time_first,omitempty"`
+	TimeLast      *timestamp `json:"time_last,omitempty"`
+	ZoneTimeFirst *timestamp `json:"zone_time_first,omitempty"`
+	ZoneTimeLast  *timestamp `json:"zone_time_last,omitempty"`
 	Rrname        string     `json:"rrname"`
 	Rrtype        string     `json:"rrtype"`
 	Rdata         []string   `json:"rdata"`
@@ -53,10 +53,10 @@ type RRSET struct {
 // Endpoint: /lookup/rdata
 type RDATA struct {
 	Count         int        `json:"count"`
-	TimeFirst     *Timestamp `json:"time_first,omitempty"`
-	TimeLast      *Timestamp `json:"time_last,omitempty"`
-	ZoneTimeFirst *Timestamp `json:"zone_time_first,omitempty"`
-	ZoneTimeLast  *Timestamp `json:"zone_time_last,omitempty"`
+	TimeFirst     *timestamp `json:"time_first,omitempty"`
+	TimeLast      *timestamp `json:"time_last,omitempty"`
+	ZoneTimeFirst *timestamp `json:"zone_time_first,omitempty"`
+	ZoneTimeLast  *timestamp `json:"zone_time_last,omitempty"`
 	Rrname        string     `json:"rrname"`
 	Rrtype        string     `json:"rrtype"`
 	Rdata         string     `json:"rdata"`
@@ -67,7 +67,7 @@ type RDATA struct {
 // Endpoint: /lookup/rate_limit
 type RateLimit struct {
 	Rate struct {
-		Reset     *Timestamp `json:"reset"`
+		Reset     *timestamp `json:"reset"`
 		Limit     int        `json:"limit"`
 		Remaining int        `json:"remaining"`
 	} `json:"rate"`
