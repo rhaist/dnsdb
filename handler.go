@@ -14,7 +14,9 @@ import (
 const apiFormat = "application/json"
 
 var (
-	APIKEY        string
+	// APIKEY is required to access the service
+	APIKEY string
+	// SERVER can be changed for different endpoints
 	SERVER        = "https://api.dnsdb.info"
 	client        *http.Client
 	rateLimit     int
