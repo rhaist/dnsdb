@@ -14,18 +14,15 @@ import (
 const apiFormat = "application/json"
 
 var (
-	// APIKEY is required to access the service
-	APIKEY string
-	// SERVER can be changed for different endpoints
-	SERVER        = "https://api.dnsdb.info"
+	APIKEY        string // APIKEY is required to access the service
+	SERVER        string // SERVER must be set to the DNSDB API server
 	client        *http.Client
 	rateLimit     int
 	rateRemaining int
 )
 
-// Initialize and configure our http.Client to only
-// use TLS 1.2 crypto for transport.
-// Also init our rateLimit
+// Initialize and configure our http.Client to only use TLS 1.2 crypto for
+// securely encrypted transport.
 func init() {
 	t := &tls.Config{}
 	t.PreferServerCipherSuites = true
@@ -39,9 +36,9 @@ func init() {
 	client = &http.Client{Transport: tr}
 }
 
-// baseAPICall is used by the query functions to perform
-// an API request and get the response data. This func
-// handles the authentication and format of the DNSDB API
+// baseAPICall is used by the query functions to perform an API request and get
+// the response data. This func handles the authentication and format of the
+// DNSDB API.
 func baseAPICall(url string) (*http.Response, error) {
 	// check if we hit the rate limit yet. If rateLimit is 0
 	// we asume this is the first request and let it pass
@@ -67,12 +64,10 @@ func baseAPICall(url string) (*http.Response, error) {
 	return resp, nil
 }
 
-// updateRateLimit is a convenient function to parse the
-// HTTP header of every DNSDB API Response for the status
-// of rate limits for the current API Key. We use this to
-// throw errors when the limit is reached. This passive
-// approach is more elegant than doing a RateLimitQuery
-// after every API query
+// updateRateLimit is a convenient function to parse the HTTP header of every
+// DNSDB API Response for the status of rate limits for the current API Key. We
+// use this to throw errors when the limit is reached. This passive approach is
+// more elegant than doing a RateLimitQuery after each API query.
 func updateRateLimit(resp *http.Response) error {
 	var err error
 	rl := resp.Header.Get("X-RateLimit-Limit")
@@ -94,10 +89,9 @@ func updateRateLimit(resp *http.Response) error {
 	return nil
 }
 
-// checkRateLimit is a convenient function to check if the
-// API allows us at least one more query. If we don't have
-// information about the rate limit we assume this is the
-// first query and use RateLimitQuery once
+// checkRateLimit is a convenient function to check if the API allows us at
+// least one more query. If we don't have information about the rate limit we
+// assume this is the first query and use RateLimitQuery once.
 func checkRateLimit() bool {
 	if rateRemaining > 0 {
 		return true
@@ -105,8 +99,7 @@ func checkRateLimit() bool {
 	return false
 }
 
-// RateLimitQuery returns the rate limits for the currently
-// used DNSDB APIKEY
+// RateLimitQuery returns the rate limits for the currently used DNSDB APIKEY.
 func RateLimitQuery() (RateLimit, error) {
 	var limits RateLimit
 	url := SERVER + "/lookup/rate_limit/"
@@ -123,8 +116,8 @@ func RateLimitQuery() (RateLimit, error) {
 	return limits, nil
 }
 
-// RRSETQuery takes a query string to search for rrset
-// records in the DNSDB and returns a RRSETArray struct
+// RRSETQuery takes a query string to search for rrset records in the DNSDB and
+// returns a RRSETArray struct.
 func RRSETQuery(query string) ([]RRSET, error) {
 	var rrset RRSET
 	var rrsetArray []RRSET
@@ -135,8 +128,9 @@ func RRSETQuery(query string) ([]RRSET, error) {
 		return rrsetArray, err
 	}
 
-	// The API does not return a valid JSON array at the
-	// moment so we need to marshal line by line
+	// The API does not return a valid JSON array at
+	// the moment so we need to marshal line by line
+	// and put the objects into our rrsetArray slice.
 	scanner := bufio.NewScanner(resp.Body)
 	for scanner.Scan() {
 		err = json.NewDecoder(bytes.NewReader(scanner.Bytes())).Decode(&rrset)
@@ -152,9 +146,8 @@ func RRSETQuery(query string) ([]RRSET, error) {
 	return rrsetArray, nil
 }
 
-// RDATAQuery takes a query string to search for rdata
-// records in the DNSDB and returns a RDATA struct.
-// Allowed format strings are "ip", "name" and "raw"
+// RDATAQuery takes a query string to search for rdata records in the DNSDB and
+// returns a RDATA struct. Allowed format strings are "ip", "name" and "raw".
 func RDATAQuery(query string, format string) ([]RDATA, error) {
 	if !checkRDATAFormat(format) {
 		return nil, errors.New("Wrong rdata format - allowed are (name|ip|raw)")
@@ -171,8 +164,9 @@ func RDATAQuery(query string, format string) ([]RDATA, error) {
 		return rdataArray, err
 	}
 
-	// The API does not return a valid JSON array at the
-	// moment so we need to marshal line by line
+	// The API does not return a valid JSON array at
+	// the moment so we need to marshal line by line
+	// and put the objects into our rdataArray slice.
 	scanner := bufio.NewScanner(resp.Body)
 	for scanner.Scan() {
 		err = json.NewDecoder(bytes.NewReader(scanner.Bytes())).Decode(&rdata)

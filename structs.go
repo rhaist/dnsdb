@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-// timestamp is used to marshal and unmarshal unix
-// timestamps returned by the API
+// timestamp is used to marshal and unmarshal unix timestamps returned by the
+// API into time.Time objects.
 type timestamp time.Time
 
 func (t *timestamp) MarshalJSON() ([]byte, error) {
@@ -35,8 +35,9 @@ func (t *timestamp) String() string {
 	return ""
 }
 
-// RRSET contains the result set of a rrset API query
-// Endpoint: /lookup/rrset
+// RRSET contains the result set of a rrset API query.
+//
+// API endpoint: /lookup/rrset
 type RRSET struct {
 	Count         int        `json:"count"`
 	TimeFirst     *timestamp `json:"time_first,omitempty"`
@@ -49,8 +50,9 @@ type RRSET struct {
 	Bailiwick     string     `json:"bailiwick"`
 }
 
-// RDATA contains the result set of a rdata API query
-// Endpoint: /lookup/rdata
+// RDATA contains the result set of a rdata API query.
+//
+// API endpoint: /lookup/rdata
 type RDATA struct {
 	Count         int        `json:"count"`
 	TimeFirst     *timestamp `json:"time_first,omitempty"`
@@ -62,9 +64,9 @@ type RDATA struct {
 	Rdata         string     `json:"rdata"`
 }
 
-// RateLimit contains the current rate limit information for the
-// used API key.
-// Endpoint: /lookup/rate_limit
+// RateLimit contains the current rate limit information for the used API key.
+//
+// API endpoint: /lookup/rate_limit
 type RateLimit struct {
 	Rate struct {
 		Reset     *timestamp `json:"reset"`
