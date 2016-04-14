@@ -42,6 +42,19 @@ Verbs:
         -q, --query     Query string (*)
 ```
 
+An example query with the command line client for all rrsets of google.com would look like this:
+
+    dnsdb rrset -q google.com
+
+## Tests
+
+Providing test cases / code for this package would allways require having a valid
+API key and consumption of a considerable amount of API quota. This is why the
+author has written the example command line client to allow more granular testing
+of this packages functions.
+
+Testing and feedback from other users of this package is much appreciated.
+
 ## License
 This software is distributed under the MIT license.
 Please have a look at the LICENSE file in the source distribution.

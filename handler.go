@@ -16,9 +16,9 @@ const apiFormat = "application/json"
 var (
 	APIKEY        string // APIKEY is required to access the service
 	SERVER        string // SERVER must be set to the DNSDB API server
+	RateLimit     int
+	RateRemaining int
 	client        *http.Client
-	rateLimit     int
-	rateRemaining int
 )
 
 // Initialize and configure our http.Client to only use TLS 1.2 crypto for
@@ -40,9 +40,9 @@ func init() {
 // the response data. This func handles the authentication and format of the
 // DNSDB API.
 func baseAPICall(url string) (*http.Response, error) {
-	// check if we hit the rate limit yet. If rateLimit is 0
+	// check if we hit the rate limit yet. If RateLimit is 0
 	// we asume this is the first request and let it pass
-	if !checkRateLimit() && rateLimit != 0 {
+	if !checkRateLimit() && RateLimit != 0 {
 		return nil, errors.New("DNSDB API quota limit reached")
 	}
 
@@ -74,14 +74,14 @@ func updateRateLimit(resp *http.Response) error {
 	rr := resp.Header.Get("X-RateLimit-Remaining")
 
 	if rl == "unlimited" {
-		rateLimit = -1
-		rateRemaining = -1
+		RateLimit = -1
+		RateRemaining = -1
 	} else {
-		rateLimit, err = strconv.Atoi(rl)
+		RateLimit, err = strconv.Atoi(rl)
 		if err != nil {
 			return err
 		}
-		rateRemaining, err = strconv.Atoi(rr)
+		RateRemaining, err = strconv.Atoi(rr)
 		if err != nil {
 			return err
 		}
@@ -93,15 +93,15 @@ func updateRateLimit(resp *http.Response) error {
 // least one more query. If we don't have information about the rate limit we
 // assume this is the first query and use RateLimitQuery once.
 func checkRateLimit() bool {
-	if rateRemaining > 0 {
+	if RateRemaining > 0 {
 		return true
 	}
 	return false
 }
 
 // RateLimitQuery returns the rate limits for the currently used DNSDB APIKEY.
-func RateLimitQuery() (RateLimit, error) {
-	var limits RateLimit
+func RateLimitQuery() (RateLimitInfo, error) {
+	var limits RateLimitInfo
 	url := SERVER + "/lookup/rate_limit/"
 
 	resp, err := baseAPICall(url)

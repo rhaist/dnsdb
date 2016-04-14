@@ -35,6 +35,12 @@ func (t *timestamp) String() string {
 	return ""
 }
 
+/*
+The DNSDB API follows an IETF draft for a json based common pDNS output format.
+The newest version can be reviewed at the IETF website:
+https://tools.ietf.org/html/draft-dulaunoy-kaplan-passive-dns-cof-02
+*/
+
 // RRSET contains the result set of a rrset API query.
 //
 // API endpoint: /lookup/rrset
@@ -64,10 +70,10 @@ type RDATA struct {
 	Rdata         string     `json:"rdata"`
 }
 
-// RateLimit contains the current rate limit information for the used API key.
+// RateLimitInfo contains the current rate limit information for the used API key.
 //
 // API endpoint: /lookup/rate_limit
-type RateLimit struct {
+type RateLimitInfo struct {
 	Rate struct {
 		Reset     *timestamp `json:"reset"`
 		Limit     int        `json:"limit"`
