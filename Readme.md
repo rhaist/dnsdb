@@ -1,6 +1,6 @@
 # dnsdb
 
-[![GoDoc](https://godoc.org/github.com/SleuthKid/dnsdb?status.svg)](https://godoc.org/github.com/SleuthKid/dnsdb)
+[![GoDoc](https://godoc.org/github.com/rhaist/dnsdb?status.svg)](https://godoc.org/github.com/rhaist/dnsdb)
 
 
 dnsdb is a go API wrapper for the [DNSDB API](https://api.dnsdb.info/) provided by [Farsight Security, Inc.](https://www.farsightsecurity.com/)
@@ -14,15 +14,15 @@ available [here](https://www.farsightsecurity.com/OrderServices/).
 
 to install the library with the example command line client do:
 
-    go get -u github.com/SleuthKid/dnsdb/...
+    go get -u github.com/rhaist/dnsdb/...
 
 to only install the library **without** the command line client do:
 
-    go get -u github.com/SleuthKid/dnsdb
+    go get -u github.com/rhaist/dnsdb
 
 ## Usage
 
-Please refer to the godocs available [here](https://godoc.org/github.com/SleuthKid/dnsdb)
+Please refer to the godocs available [here](https://godoc.org/github.com/rhaist/dnsdb)
 
 The command line client allows the following Parameters:
 ```
