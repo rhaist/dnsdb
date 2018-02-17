@@ -7,7 +7,8 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/SleuthKid/dnsdb"
+	"github.com/rhaist/dnsdb"
+
 	"github.com/voxelbrain/goptions"
 )
 
